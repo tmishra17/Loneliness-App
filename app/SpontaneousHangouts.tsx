@@ -19,7 +19,7 @@ import { MapPin, Users, Plus, Heart } from 'lucide-react';
 // - when they sign up, they will have to provide their name and location 
 // (maybe we can request their location from chrome)
 // - allow them to leave a hangout
-export default function SpontaneousHangouts() {
+export default function SpontaneousHangouts({setIsLoggedIn}: {setIsLoggedIn: (value: boolean) => void}) {
   const [view, setView] = useState('browse'); // 'browse' or 'create'
 
 
@@ -28,7 +28,8 @@ export default function SpontaneousHangouts() {
       id: 1,
       activity: 'Coffee at Philz',
       location: 'Downtown San Jose',
-      time: '30 min',
+      hour: '0',
+      minute: '30',
       attendees: 2,
       maxAttendees: 4,
       description: 'Just want to chat with someone new!'
@@ -37,7 +38,8 @@ export default function SpontaneousHangouts() {
       id: 2,
       activity: 'Pickup Basketball',
       location: 'Central Park',
-      time: '1 hour',
+      hour: '1',
+      minute: '0',
       attendees: 3,
       maxAttendees: 6,
       description: 'Need 3 more for a game'
@@ -46,23 +48,27 @@ export default function SpontaneousHangouts() {
       id: 3,
       activity: 'Study Session',
       location: 'Public Library',
-      time: '2 hours',
+      hour: '2',
+      minute: '0',
       attendees: 1,
       maxAttendees: 4,
       description: 'Working on coding projects, come join!'
     }
   ]);
-
+ 
   const [newHangout, setNewHangout] = useState({
     activity: '',
     location: '',
-    time: '',
+    hour: '0',
+    minute: '0',
     maxAttendees: 4,
     description: ''
   });
-
+  const minutes = ["0","15", "30", "45"];
+  
   const handleCreateHangout = () => {
-    if (!newHangout.activity || !newHangout.location || !newHangout.time) {
+    if (!newHangout.activity || !newHangout.location || 
+      newHangout.minute === "0" && newHangout.hour === "0") {
       return;
     }
     const hangout = {
@@ -74,7 +80,8 @@ export default function SpontaneousHangouts() {
     setNewHangout({
       activity: '',
       location: '',
-      time: '',
+      hour: '0',
+      minute: '0',
       maxAttendees: 4,
       description: ''
     });
@@ -88,7 +95,13 @@ export default function SpontaneousHangouts() {
         : h
     ));
   };
-
+  // const handleHourText = (hours)=> {
+  //   return {hours === 0? (
+  //     <span> hour </span>
+  //   ):(
+  //     <span> hours </span>
+  //   )}
+// }
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
       {/* Header */}
@@ -111,6 +124,13 @@ export default function SpontaneousHangouts() {
               ) : (
                 'Back to Browse'
               )}
+            </button>
+              
+            <button 
+            className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition"
+            onClick={()=> setIsLoggedIn(false)}
+            >
+              Log Out
             </button>
           </div>
           <p className="text-white-600 mt-2">Find people to hang out with right now, no planning needed</p>
@@ -143,7 +163,15 @@ export default function SpontaneousHangouts() {
                       <p className="text-gray-600 text-sm">{hangout.description}</p>
                     </div>
                     <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">
-                      In {hangout.time}
+                      In {' '}
+                      {/* {hangout.minute} */}
+                        {hangout.hour !== "0" && hangout.minute !== "0"? (
+                          <span>{hangout.hour} hours and {hangout.minute} mins </span>
+                        ): hangout.hour !== "0" ? (
+                          <span>{hangout.hour} hours </span>
+                        ):
+                          <span> {hangout.minute} mins</span>
+                        }
                     </span>
                   </div>
 
@@ -157,7 +185,10 @@ export default function SpontaneousHangouts() {
                       {hangout.attendees}/{hangout.maxAttendees} people
                     </div>
                   </div>
-
+                    
+                  <button className=" my-2 rounded-sm text-blue-700  rounded-med text-sm font-medium cursor-pointer">
+                    Edit
+                  </button>
                   <button
                     onClick={() => handleJoin(hangout.id)}
                     disabled={hangout.attendees >= hangout.maxAttendees}
@@ -207,19 +238,31 @@ export default function SpontaneousHangouts() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  When? (from now)
-                </label>
-                <input
-                  type="text"
-                  value={newHangout.time}
-                  onChange={(e) => setNewHangout({...newHangout, time: e.target.value})}
-                  placeholder="e.g. 30 min, 1 hour, 2 hours"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-400"
-                  required
-                />
-              </div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    When? (from now)
+                  </label>
+                  <div className='text-sm font-medium text-gray-700'>
+                    hr:
+                    <input
+                      type="number"
+                      min="0"
+                      max="4"
+                      onChange={(e) => setNewHangout({...newHangout, hour: e.target.value})}
+                      className="mx-1 px-1 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-400"
+                      required
+                      // onClick={(e)=> setNewHangout{...newHangout, hour}}
+                    />
+                    min:
+                    <select 
+                    className="mx-1 px-1 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-400"
+                    onChange= {(e) => setNewHangout({...newHangout, minute: e.target.value})}
+                    >
+                      {minutes.map(minute => (
+                        <option key={minute}>{minute}</option>
+                      ))
+                    }
+                    </select>
+                </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -262,3 +305,4 @@ export default function SpontaneousHangouts() {
     </div>
   );
 }
+
