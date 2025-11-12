@@ -19,40 +19,20 @@ import { MapPin, Users, Plus, Heart } from 'lucide-react';
 // - when they sign up, they will have to provide their name and location 
 // (maybe we can request their location from chrome)
 // - allow them to leave a hangout
+
+type Hangout = {
+  id: number;
+  activity: string;
+  hour: string;
+  minute: string;
+  attendees: number;
+  maxAttendees: number;
+  location: string;
+  description: string;
+};
 export default function SpontaneousHangouts() {
   const [view, setView] = useState('browse'); // 'browse' or 'create'
-  const [hangouts, setHangouts] = useState([
-    {
-      id: 1,
-      activity: 'Coffee at Philz',
-      location: 'Downtown San Jose',
-      hour: '0',
-      minute: '30',
-      attendees: 2,
-      maxAttendees: 4,
-      description: 'Just want to chat with someone new!'
-    },
-    {
-      id: 2,
-      activity: 'Pickup Basketball',
-      location: 'Central Park',
-      hour: '1',
-      minute: '0',
-      attendees: 3,
-      maxAttendees: 6,
-      description: 'Need 3 more for a game'
-    },
-    {
-      id: 3,
-      activity: 'Study Session',
-      location: 'Public Library',
-      hour: '2',
-      minute: '0',
-      attendees: 1,
-      maxAttendees: 4,
-      description: 'Working on coding projects, come join!'
-    }
-  ]);
+  const [hangouts, setHangouts] = useState<Hangout[]>([]);
   useEffect(()=> {
     fetch("http://127.0.0.1:8000/hangouts")
     .then(res => res.json())
