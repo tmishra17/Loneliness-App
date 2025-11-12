@@ -107,13 +107,13 @@ export default function SpontaneousHangouts() {
     };
     const handleJoin = async (id: number) => {
       // Get current hangout
-    if (hangouts.length === 0) return
-    const hangout = hangouts.find(h => h.id === id);
-    if (hangout.attendees >= hangout.maxAttendees) {
-      return; // Already full
-    }
-  // Update on backend
-  await fetch(`http://127.0.0.1:8000/hangouts/${id}`, {
+      const hangout = hangouts.find(h => h.id === id);
+      if (!hangout) return; // hangout may be undefined
+      if (hangout.attendees >= hangout.maxAttendees) {
+        return; // Already full
+      }
+      // Update on backend
+      await fetch(`http://127.0.0.1:8000/hangouts/${id}`, {
     method: 'PUT',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
