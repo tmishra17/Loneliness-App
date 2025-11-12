@@ -79,7 +79,7 @@ def create_hangout(hangout: dict):
     new_id = cur.lastrowid
 
     # fetch newly added hangout
-    cur.execute("SELECT * FROM hangouts WHERE id = ?", (new_id))
+    cur.execute("SELECT * FROM hangouts WHERE id = ?", (new_id,))
     new_hangout = dict(cur.fetchone())
     return new_hangout
 
