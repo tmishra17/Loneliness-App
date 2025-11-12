@@ -53,7 +53,6 @@ def get_hangouts():
     cur.execute("SELECT * FROM hangouts") # returns list of tuples
     rows = cur.fetchall()
 
-    print(rows )
     return [dict(row) for row in rows]
 
 @app.post('/hangouts')

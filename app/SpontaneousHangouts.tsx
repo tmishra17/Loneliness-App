@@ -281,6 +281,7 @@ export default function SpontaneousHangouts({setIsLoggedIn}: {setIsLoggedIn: (va
                     <input
                       type="number"
                       min="0"
+                     
                       max="4"
                       onChange={(e) => setNewHangout({...newHangout, hour: e.target.value})}
                       className="mx-1 px-1 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-400"
