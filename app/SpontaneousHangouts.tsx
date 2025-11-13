@@ -1,7 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { MapPin, Users, Plus, Heart } from 'lucide-react';
-
+import icon from "./icon.svg"
+import Image from 'next/image'
 // TODO:
 // - allow them to edit their hangout
 // - let them know if their hangout was successfully created
@@ -34,7 +35,7 @@ export default function SpontaneousHangouts() {
   const [view, setView] = useState('browse'); // 'browse' or 'create'
   const [hangouts, setHangouts] = useState<Hangout[]>([]);
   useEffect(()=> {
-    fetch("http://127.0.0.1:8000/hangouts")
+    fetch("${API_URL}")
     .then(res => res.json())
     .then(data=> setHangouts(data))
   }, [])
@@ -49,13 +50,13 @@ export default function SpontaneousHangouts() {
     description: ''
   });
   const minutes = ["0","15", "30", "45"];
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
   
   const handleCreateHangout = async() => {
     if (!newHangout.activity || !newHangout.location || 
       newHangout.minute === "0" && newHangout.hour === "0") {
       return;
     }
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
     const  response = await fetch(`${API_URL}/hangouts`, {
       method: 'POST',
       headers: {'Content-Type': "application/json"},
@@ -78,7 +79,7 @@ export default function SpontaneousHangouts() {
     setView('browse');
   };
   const handleDelete = async (id: number) => {
-    await fetch(`http://127.0.0.1:8000/hangouts/${id}`, {
+    await fetch(`${API_URL}/${id}`, {
       method: 'DELETE'
     });
     
@@ -93,7 +94,7 @@ export default function SpontaneousHangouts() {
         return; // Already full
       }
       // Update on backend
-      await fetch(`http://127.0.0.1:8000/hangouts/${id}`, {
+      await fetch(`${API_URL}/${id}`, {
     method: 'PUT',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
@@ -117,7 +118,7 @@ export default function SpontaneousHangouts() {
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Heart className="w-8 h-8 text-purple-600" />
+              <Image src={icon} alt="Heart logo" className='w-24 h-16'/>
               <h1 className="text-2xl font-bold text-gray-100">Spontaneous</h1>
             </div>
             <button
@@ -134,13 +135,6 @@ export default function SpontaneousHangouts() {
               )}
             </button>
             
-          
-            {/* <button 
-            className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition"
-            onClick={()=> setIsLoggedIn(false)}
-            >
-              Log Out
-            </button> */}
           </div>
           <p className="text-gray-100 mt-2">Find people to hang out with right now, no planning needed</p>
         </div>
