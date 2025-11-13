@@ -1,11 +1,10 @@
-# from flask import Flask, jsonify
-from typing import Any
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
-# app = Flask(__name__)
-FRONTEND_URL = "https://spontaneous-hangouts-erh31rpfz-tmishra17s-projects.vercel.app"
-BACKEND_URL = "https://spontaneous-hangouts-production.up.railway.app/hangouts"
+
+# FUTURE REFERENCE FOR ADDING SECURE ORIGINS
+# FRONTEND_URL = "https://spontaneous-hangouts-erh31rpfz-tmishra17s-projects.vercel.app"
+# BACKEND_URL = "https://spontaneous-hangouts-production.up.railway.app/hangouts"
 
 app = FastAPI()
 app.add_middleware(
