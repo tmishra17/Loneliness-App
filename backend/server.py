@@ -4,11 +4,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 # app = Flask(__name__)
+FRONTEND_URL = "https://spontaneous-hangouts-erh31rpfz-tmishra17s-projects.vercel.app"
+BACKEND_URL = "https://spontaneous-hangouts-production.up.railway.app/hangouts"
 
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], # allow from anywhere
+    allow_credentials = True,
     allow_methods=["*"], # Allow all requests between two ports (can limit to only 1,2, or 3)
     allow_headers=["*"] # allow all headers, accept any header frontend sends (which meta data fields should be in request)
 )
