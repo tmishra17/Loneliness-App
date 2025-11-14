@@ -97,7 +97,7 @@ export default function SpontaneousHangouts() {
         return; // Already full
       }
       // Update on backend
-      await fetch(`${API_URL}/${id}`, {
+      await fetch(`${API_URL}/hangouts/${id}`, {
                 method: 'PUT',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
