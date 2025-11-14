@@ -3,17 +3,18 @@ from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 
 # FUTURE REFERENCE FOR ADDING SECURE ORIGINS
-FRONTEND_URLS = ["https://spontaneous-hangouts.vercel.app", "https://spontaneous-hangouts-h6g2uuwx9-tmishra17s-projects.vercel.app"]
+FRONTEND_URLS = [
+    "https://spontaneous-hangouts.vercel.app", 
+    "https://spontaneous-hangouts-h6g2uuwx9-tmishra17s-projects.vercel.app",
+    "http://localhost:3000", # For local development
+    "http://127.0.0.1:3000" # Alternative localhost
+    ]
 # BACKEND_URL = "https://spontaneous-hangouts-production.up.railway.app/hangouts"
 
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        FRONTEND_URLS,
-        "http://localhost:3000",  # For local development
-        "http://127.0.0.1:3000",  # Alternative localhost
-    ], # allow from anywhere
+    allow_origins=[FRONTEND_URLS], # allow from anywhere
     allow_credentials = True,
     allow_methods=["*"], # Allow all requests between two ports (can limit to only 1,2, or 3)
     allow_headers=["*"] # allow all headers, accept any header frontend sends (which meta data fields should be in request)
