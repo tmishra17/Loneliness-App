@@ -5,7 +5,7 @@ import sqlite3
 # FUTURE REFERENCE FOR ADDING SECURE ORIGINS
 FRONTEND_URLS = [
     "https://spontaneous-hangouts.vercel.app", 
-    "https://spontaneous-hangouts-h6g2uuwx9-tmishra17s-projects.vercel.app",
+    "https://spontaneous-hangouts-9blma3pms-tmishra17s-projects.vercel.app/",
     "http://localhost:3000", # For local development
     "http://127.0.0.1:3000" # Alternative localhost
     ]

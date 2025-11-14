@@ -7,9 +7,8 @@ want to grab coffee with someone right now and not worry about needing to schedu
 
 ## Features
 - Create time-sensitive hangouts
-- Browse nearby events
+- Browse upcoming events
 - Join events with capacity limits
-- Real-time attendee tracking
 
 ## Tech Stack
 - **Frontend:** Next.js, React, TypeScript, Tailwind CSS
@@ -68,3 +67,15 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - Push notifications
 - Mobile app version
 
+
+## Troubleshooting and Deployment Notes
+
+This project uses a **Next.js frontend (Vercel)** and a FastAPI backend (Railway). Cross-Origin Resource Sharing (CORS) is enabled using `CORSMiddleware` on the backend.
+
+### Common Deployment Issues (FastAPI on Railway)
+
+| Issue/Error | Cause | Resolution |
+| :--- | :--- | :--- |
+| `No 'Access-Control-Allow-Origin' header is present...` | The FastAPI CORS middleware was not active on the Railway server. | Configurations for `allow_origins` are incorrect, make sure you have **ALL** the correct links when you are adding your frontend urls. Or make sure Railway is configured correctly (e.g. have ``)|
+| `Error: Invalid value for '--port': '$PORT' is not a valid integer.` | The `uvicorn` server was reading the literal string `$PORT` instead of the environment variable. | Fixed by manually adding the port to the build command |
+| `Error loading ASGI app. Could not import module "server"` | Python could not find the application file (`server.py`) inside the `backend` directory. | Added an `__init__.py` to the backend folder to mark it as a Python package, allowing the use of the command `backend.server:app.` |
