@@ -65,7 +65,13 @@ export default function SpontaneousHangouts() {
       }
       return res.json()
     })
-    .then(data=> setHangouts(data))
+    .then(data=> {
+      const hangoutsToFalse = data.map((hangout: Hangout) => ({
+            ...hangout,
+            editing: false
+      }));
+      setHangouts(hangoutsToFalse)
+    })
     .catch(error => {
       console.log(`Error fetching hangouts due to ${error}`)
     })
@@ -227,28 +233,12 @@ export default function SpontaneousHangouts() {
               </div>
             ) : (
               hangouts.map(hangout => (
+                
                 <div key={hangout.id} className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition">
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                        {hangout.activity}
-                      </h3>
-                      <p className="text-gray-600 text-sm">{hangout.description}</p>
-                    </div>
-                    <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">
-                      In {' '}
-                      {/* {hangout.minute} */}
-                        {hangout.hour !== "0" && hangout.minute !== "0"? (
-                          <span>{hangout.hour} hour(s) and {hangout.minute} mins </span>
-                        ): hangout.hour !== "0" ? (
-                          <span>{hangout.hour} hour(s) </span>
-                        ):
-                          <span>{hangout.minute} mins</span>
-                        }
-                    </span>
-                  </div>
-
-                  <div className="flex gap-4 mb-4 text-sm text-gray-600">
+                  
+                  {hangout.editing? (
+                    <>
+                    <div className="flex gap-4 mb-4 text-sm text-gray-600">
                     <div className="flex items-center gap-1">
                       <MapPin className="w-4 h-4" />
                       {hangout.location}
@@ -258,8 +248,6 @@ export default function SpontaneousHangouts() {
                       {hangout.attendees}/{hangout.maxAttendees} people
                     </div>
                   </div>
-                  {hangout.editing? (
-                    <>
                       <div>
                         <input 
                           onChange={(e) => setActivity(hangout.id, e.target.value)}
@@ -297,6 +285,36 @@ export default function SpontaneousHangouts() {
                     </>
                   ): (
                       <>
+                        <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                          {hangout.activity}
+                        </h3>
+                        <p className="text-gray-600 text-sm">{hangout.description}</p>
+                      </div>
+                      <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">
+                        In {' '}
+                        {/* {hangout.minute} */}
+                          {hangout.hour !== "0" && hangout.minute !== "0"? (
+                            <span>{hangout.hour} hour(s) and {hangout.minute} mins </span>
+                          ): hangout.hour !== "0" ? (
+                            <span>{hangout.hour} hour(s) </span>
+                          ):
+                            <span>{hangout.minute} mins</span>
+                          }
+                      </span>
+                    </div>
+
+                  <div className="flex gap-4 mb-4 text-sm text-gray-600">
+                    <div className="flex items-center gap-1">
+                      <MapPin className="w-4 h-4" />
+                      {hangout.location}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      {hangout.attendees}/{hangout.maxAttendees} people
+                    </div>
+                  </div>
                         <button 
                           onClick={()=>toggleEdit(hangout.id)}
                           className=" my-2 rounded-sm text-blue-700  rounded-med text-sm font-medium cursor-pointer"

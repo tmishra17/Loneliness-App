@@ -48,7 +48,7 @@ def get_hangouts():
     cur = con.cursor() # cursor (worker) will now get the data from the SQL table
     cur.execute("SELECT * FROM hangouts") # returns list of tuples
     rows = cur.fetchall()
-
+    
     return [dict(row) for row in rows]
 
 @app.post('/hangouts')
@@ -130,5 +130,5 @@ def update_hangout(id: int, hangout: dict):
                       hangout['location'],
                       hangout.get("description", ''),
                       hangout['editing'],
-                      id
+                      id,
                     ))
