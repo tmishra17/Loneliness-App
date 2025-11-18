@@ -108,26 +108,27 @@ def delete_hangout(id: int):
 
     return {"message": "Deleted", "id": id}
 
-# @app.put("/hangouts/{id}")
-# def update_hangout(id: int, hangout: dict):
-#     cur = con.cursor()
-#     cur.execute("""UPDATE hangouts 
-#                     SET 
-#                     (activity, 
-#                     hour, 
-#                     minute, 
-#                     maxAttendees, 
-#                     location, 
-#                     description, 
-#                     editing)
-#                     VALUE (?, ?, ?, ?, ?, ?, ?)
-#                     """,
-#                     (
-#                       hangout['activity'],
-#                       hangout['hour'],
-#                       hangout['minute'],
-#                       hangout['maxAttendees'],
-#                       hangout['location'],
-#                       hangout['description'],
-#                       hangout['editing']
-#                     ))
+@app.put("/hangouts/{id}")
+def update_hangout(id: int, hangout: dict):
+    cur = con.cursor()
+    cur.execute("""UPDATE hangouts 
+                    SET 
+                    activity = ?, 
+                    hour = ?, 
+                    minute = ?, 
+                    maxAttendees = ?, 
+                    location = ?, 
+                    description = ?, 
+                    editing = ?
+                    WHERE id = ?;
+                    """,
+                    (
+                      hangout['activity'],
+                      hangout['hour'],
+                      hangout['minute'],
+                      hangout['maxAttendees'],
+                      hangout['location'],
+                      hangout.get("description", ''),
+                      hangout['editing'],
+                      id
+                    ))

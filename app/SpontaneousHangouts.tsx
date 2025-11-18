@@ -46,7 +46,14 @@ export default function SpontaneousHangouts() {
       console.error("Undefined Hangout")
       return
     }
-    hangout.editing = !hangout?.editing
+    setHangouts(prevHangouts => {
+      return prevHangouts.map(hangout => {
+          if(hangout.id ==  id) {
+            return {...hangout, editing: !hangout.editing};
+          }
+          return hangout
+        })
+    })
   }
   
   useEffect(()=> {
@@ -77,18 +84,41 @@ export default function SpontaneousHangouts() {
   const minutes = ["0","15", "30", "45"];
   const handleSaveClick  = async(id: number) => {
     const hangout = hangouts.find(h => h.id === id)
-
     try {
         await fetch(`${API_URL}/hangouts/${id}`, {
           method: 'PUT',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(hangout)
       })
-
     }
     catch(err) {
       console.error(`Failed to update hangout due to ${err}.`)
     }
+    toggleEdit(id)
+  }
+  const setActivity = (id: number, activity: string) => {
+    const hangout = hangouts.find(h=> h.id === id)
+    if (!hangout) {
+      console.error("Undefined hangout")
+      return
+    }
+    hangout.activity = activity
+  }
+  const setLocation = (id: number, location: string) => {
+    const hangout = hangouts.find(h=> h.id === id)
+    if (!hangout) {
+      console.error("Undefined hangout")
+      return
+    }
+    hangout.location = location
+  }
+  const setDescription = (id: number, description: string) => {
+    const hangout = hangouts.find(h=> h.id === id)
+    if (!hangout) {
+      console.error("Undefined hangout")
+      return
+    }
+    hangout.description = description
   }
   const handleCreateHangout = async() => {
     if (!newHangout.activity || !newHangout.location || 
@@ -115,6 +145,7 @@ export default function SpontaneousHangouts() {
       description: '',
       editing: false
     });
+
     setView('browse');
   };
   const handleDelete = async (id: number) => {
@@ -129,6 +160,7 @@ export default function SpontaneousHangouts() {
       // Get current hangout
       const hangout = hangouts.find(h => h.id === id);
       if (!hangout) return; // hangout may be undefined
+
       if (hangout.attendees >= hangout.maxAttendees) {
         return; // Already full
       }
@@ -140,8 +172,6 @@ export default function SpontaneousHangouts() {
                   attendees: hangout.attendees + 1
                 })
   });
-
-
 
     setHangouts(hangouts.map(h => 
       h.id === id && h.attendees < h.maxAttendees
@@ -230,53 +260,70 @@ export default function SpontaneousHangouts() {
                   </div>
                   {hangout.editing? (
                     <>
-                      <input 
-                        // onChange={}
-                      />
-
+                      <div>
+                        <input 
+                          onChange={(e) => setActivity(hangout.id, e.target.value)}
+                          placeholder='Change Activity'
+                          
+                        />
+                      </div>
+                      <div>
+                        <input 
+                          // className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition"
+                          onChange={(e) => setLocation(hangout.id, e.target.value)}
+                          placeholder='Change location'
+                          
+                        />
+                      </div>
+                      <div>
+                        <input 
+                          onChange={(e) => setDescription(hangout.id, e.target.value)}
+                          placeholder='Change Description'
+                        />
+                      </div>
                       <button 
                         onClick={()=>handleSaveClick(hangout.id)}
                         className=" my-2 rounded-sm text-blue-700  rounded-med text-sm font-medium cursor-pointer"
                         
-                      >
+                        >
                           Save
                       </button>
                       <button
                         onClick={()=>toggleEdit(hangout.id)}
                         className="mt-2 my-2 w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                      >
+                        >
                         Cancel
                       </button>
                     </>
                   ): (
-                    <>
-                      <button 
-                        onClick={()=>toggleEdit(hangout.id)}
-                        className=" my-2 rounded-sm text-blue-700  rounded-med text-sm font-medium cursor-pointer"
-                      
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleJoin(hangout.id)}
-                        disabled={hangout.attendees >= hangout.maxAttendees}
-                        className={`w-full py-2 rounded-lg font-medium transition ${
-                          hangout.attendees >= hangout.maxAttendees
-                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                            : 'bg-purple-600 text-white hover:bg-purple-700'
-                        }`}
-                      >
-                        {hangout.attendees >= hangout.maxAttendees ? 'Full' : "I'm In!"}
-                      </button>
-                      <button
-                        onClick={() => handleDelete(hangout.id)}
-                        className="mt-2 my-2 w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                      >
-                        Delete
-                      </button>
-                  </>
-                  )
-                  
+                      <>
+                        <button 
+                          onClick={()=>toggleEdit(hangout.id)}
+                          className=" my-2 rounded-sm text-blue-700  rounded-med text-sm font-medium cursor-pointer"
+                          
+
+                          >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleJoin(hangout.id)}
+                          disabled={hangout.attendees >= hangout.maxAttendees}
+                          className={`w-full py-2 rounded-lg font-medium transition ${
+                            hangout.attendees >= hangout.maxAttendees
+                              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                              : 'bg-purple-600 text-white hover:bg-purple-700'
+                          }`}
+                        >
+                          {hangout.attendees >= hangout.maxAttendees ? 'Full' : "I'm In!"}
+                        </button>
+                        <button
+                          onClick={() => handleDelete(hangout.id)}
+                          className="mt-2 my-2 w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )
                   }
                  
                 </div>
